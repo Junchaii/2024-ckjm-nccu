@@ -4,6 +4,11 @@ original version: https://github.com/dspinellis/ckjm
 * The differences:
   * This version relies solely on Maven. The resulting JAR file, named 'xxx-with-dependencies.jar,' encapsulates all its dependencies within the same archive.
   * This version customizes several counting details to align with our research requirements, particularly those pertaining to the JDK and other infrastructural libraries and frameworks. Our focus lies on assessing the actual costs incurred by the end developer.
+* Usage: 
+  * Run Maven install
+  * In the terminal, switch to the project dir and then execute: java -jar .\target\ckjm-1.0-SNAPSHOT-jar-with-dependencies.jar <target to inspect>
+  * (Example) java -jar .\target\ckjm-1.0-SNAPSHOT-jar-with-dependencies.jar .\target\classes\gr\spinellis\ckjm\*.class
+
 
 --- 
 # Original README.md
