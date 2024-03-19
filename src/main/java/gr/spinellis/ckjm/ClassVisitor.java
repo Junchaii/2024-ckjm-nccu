@@ -85,7 +85,19 @@ public class ClassVisitor extends org.apache.bcel.classfile.EmptyVisitor {
 
 	pm.incNoc();
 	try {
-	    cm.setDit(jc.getSuperClasses().length);
+		int superClassesLength = jc.getSuperClasses().length;
+
+		/* Measuring decision: don't couple to Java SDK */
+		/* Print DIT details & Set DIT */
+		for (JavaClass superClass : jc.getSuperClasses()) {
+			if(ClassMetrics.isJdkClass(superClass.getClassName())) {
+				superClassesLength--;
+			} else {
+				System.out.println("(DIT)SuperClass->" + superClass.getClassName());
+			}
+		}
+		cm.setDit(superClassesLength);
+
 	} catch( ClassNotFoundException ex) {
 	    System.err.println("Error obtaining all superclasses of " + jc);
 	}
