@@ -205,7 +205,16 @@ public class ClassVisitor extends org.apache.bcel.classfile.EmptyVisitor {
     /** Do final accounting at the end of the visit. */
     public void end() {
 	cm.setCbo(efferentCoupledClasses.size());
+	/* Print CBO details */
+	for (String className : efferentCoupledClasses) {
+		System.out.println("(CBO)CoupledClass->>" + className);
+	}
+
 	cm.setRfc(responseSet.size());
+	/* Print RFC details */
+	for (String response : responseSet) {
+		System.out.println("(RFC)ResponseSet->>" + response);
+	}
 	/*
 	 * Calculate LCOM  as |P| - |Q| if |P| - |Q| > 0 or 0 otherwise
 	 * where
