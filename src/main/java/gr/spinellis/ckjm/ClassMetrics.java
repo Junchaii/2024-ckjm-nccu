@@ -16,7 +16,9 @@
 
 package gr.spinellis.ckjm;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 
 /**
  * Store details needed for calculating a class's Chidamber-Kemerer metrics.
@@ -30,7 +32,9 @@ import java.util.HashSet;
  */
 public class ClassMetrics {
     /** Weighted methods per class */
-    private int wmc;
+    private float wmc;
+    /** Complexity value per method */
+    ArrayList<Float> locArray = new ArrayList<>();
     /** Number of children */
     private int noc;
     /** Response for a Class */
@@ -43,6 +47,14 @@ public class ClassMetrics {
     private int lcom;
     /** Number of public methods */
     private int npm;
+    /** The maximum number of lines of code count in class
+     * It is used to calculate complexity value of WMC
+     * */
+    private float maxLoc = 0;
+    /** The minimum number of lines of code count in class
+     * It is used to calculate complexity value of WMC
+     * */
+    private float minLoc = 0;
     /** True if the class has been visited by the metrics gatherer */
     private boolean visited;
     /** True if the class is public */
@@ -60,10 +72,41 @@ public class ClassMetrics {
 	afferentCoupledClasses = new HashSet<String>();
     }
 
+    /** set the minimum number of lines of code count */
+    public void setMinLoc(float number) {
+        minLoc = number;
+    }
+
+    /** set the maximum number of lines of code count */
+    public void setMaxLoc(float number) {
+        maxLoc = number;
+    }
+
     /** Increment the weighted methods count */
-    public void incWmc() { wmc++; }
+    public void putLocArray(float cx) {
+        locArray.add(cx);
+    }
     /** Return the weighted methods per class metric */
-    public int getWmc() { return wmc; }
+    public float getWmc() {
+        System.out.println("minLoc: " + minLoc);
+        System.out.println("maxLoc: " + maxLoc);
+        for(float eachLoc: locArray) {
+            if(eachLoc == minLoc) {
+                wmc = wmc + 1;
+                System.out.println("loc: " + eachLoc + " cx: " + 1);
+                continue;
+            } else if(eachLoc == maxLoc) {
+                wmc = wmc + 2;
+                System.out.println("loc: " + eachLoc + " cx: " + 2);
+                continue;
+            }
+
+            wmc = wmc + ((eachLoc - minLoc)/(maxLoc - minLoc) + 1);
+            float thisWmc = ((eachLoc - minLoc)/(maxLoc - minLoc) + 1);
+            System.out.println("loc: " + eachLoc + " cx: " + thisWmc);
+        }
+        return wmc;
+    }
 
     /** Increment the number of children */
     public void incNoc() { noc++; }
@@ -117,7 +160,7 @@ public class ClassMetrics {
     /** Return the 6 CK metrics plus Ce as a space-separated string */
     public String toString() {
 	return (
-		wmc +
+		getWmc() +
 		" " + getDit() +
 		" " + noc +
 		" " + cbo +
