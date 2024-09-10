@@ -58,10 +58,15 @@ public class ClassVisitor extends org.apache.bcel.classfile.EmptyVisitor {
      */
     private HashSet<String> efferentCoupledClasses = new HashSet<String>();
     /**
-     * Methods encountered.
-     * Its cardinality is used for calculating the RFC.
+     * Methods encountered in the same package.
+     * Its cardinality is used for calculating the SRFC.
      */
-    private HashSet<String> responseSet = new HashSet<String>();
+    private HashSet<String> samePackageResponseSet = new HashSet<String>();
+    /**
+     * Methods encountered in different packages.
+     * Its cardinality is used for calculating the DRFC.
+     */
+    private HashSet<String> differentPackageResponseSet = new HashSet<String>();
     /**
      * Use of fields in methods.
      * Its contents are used for calculating the LCOM.
@@ -201,8 +206,24 @@ public class ClassVisitor extends org.apache.bcel.classfile.EmptyVisitor {
             // remove [ ] chars from begin and end
             String args = argumentList.substring(1, argumentList.length() - 1);
             String signature = className + "." + methodName + "(" + args + ")";
-            responseSet.add(signature);
+
+            if (getPackageName(className).equals(getPackageName(myClassName))) {
+                // same package
+                samePackageResponseSet.add(signature);
+            } else {
+                // different package
+                differentPackageResponseSet.add(signature);
+            }
         }
+    }
+
+    /** Helper method to extract package name from a fully qualified class name. */
+    private String getPackageName(String className) {
+        int lastDotIndex = className.lastIndexOf('.');
+        if (lastDotIndex == -1) {
+            return ""; // default package
+        }
+        return className.substring(0, lastDotIndex);
     }
 
     /**
@@ -291,11 +312,19 @@ public class ClassVisitor extends org.apache.bcel.classfile.EmptyVisitor {
             System.out.println("(CBO)CoupledClass->>" + className);
         }
 
-        cm.setRfc(responseSet.size());
-        /* Print RFC details */
-        for (String response : responseSet) {
-            System.out.println("(RFC)ResponseSet->>" + response);
+        cm.setSrfc(samePackageResponseSet.size());
+        cm.setDrfc(differentPackageResponseSet.size());
+        /* Print SRFC & DRFC details */
+        System.out.println("(SRFC) Same Package Response Set Size: " + cm.getSrfc());
+        for (String response : samePackageResponseSet) {
+            System.out.println("(SRFC) Response ->> " + response);
         }
+
+        System.out.println("(DRFC) Different Package Response Set Size: " + cm.getDrfc());
+        for (String response : differentPackageResponseSet) {
+            System.out.println("(DRFC) Response ->> " + response);
+        }
+
         /*
          * Calculate LCOM  as |P| - |Q| if |P| - |Q| > 0 or 0 otherwise
          * where

@@ -39,6 +39,10 @@ public class ClassMetrics {
     private int noc;
     /** Response for a Class */
     private int rfc;
+    /** Same Package Response for a Class */
+    private int srfc;
+    /** Different Package Response for a Class */
+    private int drfc;
     /** Coupling between object classes */
     private int cbo;
     /** Depth of inheritence tree */
@@ -118,6 +122,18 @@ public class ClassMetrics {
     /** Return the Response for a Class */
     public int getRfc() { return rfc; }
 
+    /** Set the Same Package Response for a Class */
+    public void setSrfc(int sr) { srfc = sr; }
+
+    /** Return the Same Package Response for a Class */
+    public int getSrfc() { return srfc; }
+
+    /** Set the Different Package Response for a Class */
+    public void setDrfc(int dr) { drfc = dr; }
+
+    /** Return the Different Package Response for a Class */
+    public int getDrfc() { return drfc; }
+
     /** Set the depth of inheritence tree metric */
     public void setDit(int d) { dit = d; }
     /** Return the depth of the class's inheritance tree */
@@ -167,7 +183,10 @@ public class ClassMetrics {
 		" " + rfc +
 		" " + lcom +
 		" " + getCa()+
-		" " + npm);
+		" " + npm  +
+        " " + srfc +
+        " " + drfc
+        );
     }
 
     /** Mark the instance as visited by the metrics analyzer */
