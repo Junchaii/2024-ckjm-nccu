@@ -180,7 +180,7 @@ public class ClassMetrics {
 		" " + getDit() +
 		" " + noc +
 		" " + cbo +
-		" " + rfc +
+		" " + (srfc + drfc) +
 		" " + lcom +
 		" " + getCa()+
 		" " + npm  +
