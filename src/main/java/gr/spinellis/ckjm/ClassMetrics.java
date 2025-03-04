@@ -45,6 +45,8 @@ public class ClassMetrics {
     private int drfc;
     /** Coupling between object classes */
     private int cbo;
+    /** Coupling between object classes specific to the Spring Framework */
+    private int dicbo;
     /** Depth of inheritence tree */
     private int dit;
     /** Lack of cohesion in methods */
@@ -71,6 +73,7 @@ public class ClassMetrics {
 	wmc = 0;
 	noc = 0;
 	cbo = 0;
+    dicbo = 0;
 	npm = 0;
 	visited = false;
 	afferentCoupledClasses = new HashSet<String>();
@@ -144,6 +147,15 @@ public class ClassMetrics {
     /** Return the coupling between object classes metric */
     public int getCbo() { return cbo; }
 
+    /** Set the coupling between object classes specific to the Spring Framework metric  */
+    public void setDicbo(int dic) {
+        dicbo = dic;
+    }
+    /** Return the coupling between object classes specific to the Spring Framework metric  */
+    public int getDicbo() {
+        return dicbo;
+    }
+
     /** Return the class's lack of cohesion in methods metric */
     public int getLcom() { return lcom; }
     /** Set the class's lack of cohesion in methods metric */
@@ -180,6 +192,7 @@ public class ClassMetrics {
 		" " + getDit() +
 		" " + noc +
 		" " + cbo +
+        " " + dicbo +
 		" " + (srfc + drfc) +
 		" " + lcom +
 		" " + getCa()+
